@@ -6,7 +6,6 @@ import { AnonAadhaarProvider } from "@anon-aadhaar/react";
 import { Header } from "../components/Header";
 import { WagmiProvider } from "wagmi";
 import { createWeb3Modal } from "@web3modal/wagmi/react";
-import { Footer } from "@/components/Footer";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { wagmiConfig } from "../config";
 
@@ -24,8 +23,8 @@ export const AppContext = createContext<{
   setInsured: (insured: boolean) => void;
 }>({
   useTestAadhaar: false,
-  setIsTestMode: () => {},
-  setInsured: () => {},
+  setIsTestMode: () => { },
+  setInsured: () => { },
 });
 
 export default function App({ Component, pageProps }: AppProps) {
@@ -76,10 +75,6 @@ export default function App({ Component, pageProps }: AppProps) {
                     <Header />
                     <Component {...pageProps} />
                   </div>
-                  <Footer
-                    isDisplayed={isDisplayed}
-                    setIsDisplayed={setIsDisplayed}
-                  />
                 </div>
               </AnonAadhaarProvider>
             </QueryClientProvider>
