@@ -22,7 +22,7 @@ const LaunchMode = ({
   return (
     <span onClick={() => setIsTestMode(isTest)}>
       <LaunchProveModal
-        nullifierSeed={Math.floor(Math.random() * 1983248)}
+        nullifierSeed={12345678983762535}
         signal={address}
         buttonStyle={{
           borderRadius: "8px",

@@ -8,6 +8,7 @@ import "@anon-aadhaar/contracts/interfaces/IAnonAadhaar.sol";
 contract InsurancePolicyIssuer {
     // Struct representing a policy
     struct Policy {
+        uint256 policyId;         // Unique ID for the policy
         uint256 nullifier;        // Unique identifier derived from Aadhaar proof (ZK nullifier)
         uint256 coverageAmount;   // Maximum coverage amount (in wei or token base unit)
         uint256 validTill;        // Unix timestamp until which the policy is valid
@@ -15,19 +16,24 @@ contract InsurancePolicyIssuer {
     }
 
     address public anonAadhaarVerifierAddr;
+    mapping(uint256 => mapping(uint256 => string[])) public servicesCovered; // nullifier => policyId => servicesCovered
     mapping(uint256 => Policy) public policies; // nullifier => Policy
-    // To prevent issuing multiple policies to the same nullifier
-    mapping(uint256 => bool) public policyIssued;
+    mapping(uint256 => bool) public policyIssued; // Prevent issuing multiple policies to the same nullifier
+
+    uint256 public nextPolicyId; // Counter for generating unique policy IDs
 
     event PolicyIssued(
+        uint256 indexed policyId,
         address indexed issuer,
         uint256 indexed nullifier,
         uint256 coverageAmount,
-        uint256 validTill
+        uint256 validTill,
+        string[] servicesCovered
     );
 
     constructor(address _verifierAddr) {
         anonAadhaarVerifierAddr = _verifierAddr;
+        nextPolicyId = 1; // Start policy IDs from 1
     }
 
     /// @dev Convert an address to uint256, used to compare with signal.
@@ -50,6 +56,7 @@ contract InsurancePolicyIssuer {
     /// @param groth16Proof: The ZK SNARK proof array [8].
     /// @param coverageAmount: Maximum coverage provided by this policy.
     /// @param validTill: The Unix time until which the policy is valid.
+    /// @param servicesCoveredList: List of services covered under this policy.
     function issuePolicy(
         uint256 nullifierSeed,
         uint256 nullifier,
@@ -58,7 +65,8 @@ contract InsurancePolicyIssuer {
         uint256[4] memory revealArray,
         uint256[8] memory groth16Proof,
         uint256 coverageAmount,
-        uint256 validTill
+        uint256 validTill,
+        string[] memory servicesCoveredList
     ) public {
         require(
             addressToUint256(msg.sender) == signal,
@@ -96,7 +104,9 @@ contract InsurancePolicyIssuer {
         );
 
         // Create and store the policy
+        uint256 policyId = nextPolicyId++;
         Policy memory newPolicy = Policy({
+            policyId: policyId,
             nullifier: nullifier,
             coverageAmount: coverageAmount,
             validTill: validTill,
@@ -104,23 +114,36 @@ contract InsurancePolicyIssuer {
         });
 
         policies[nullifier] = newPolicy;
+        servicesCovered[nullifier][policyId] = servicesCoveredList;
         policyIssued[nullifier] = true;
 
-        emit PolicyIssued(msg.sender, nullifier, coverageAmount, validTill);
+        emit PolicyIssued(policyId, msg.sender, nullifier, coverageAmount, validTill, servicesCoveredList);
     }
 
     /// @notice Retrieve policy details by nullifier
     /// @param _nullifier: The unique nullifier of the policy.
-    /// @return coverageAmount, validTill, active
+    /// @return policyId, coverageAmount, validTill, active
     function getPolicy(
         uint256 _nullifier
-    ) public view returns (uint256, uint256, bool) {
+    ) public view returns (uint256, uint256, uint256, bool) {
         Policy memory policy = policies[_nullifier];
         return (
+            policy.policyId,
             policy.coverageAmount,
             policy.validTill,
             policy.active
         );
+    }
+
+    /// @notice Retrieve services covered for a specific nullifier and policyId
+    /// @param _nullifier: The unique nullifier.
+    /// @param _policyId: The policy ID.
+    /// @return List of services covered.
+    function getServicesCovered(
+        uint256 _nullifier,
+        uint256 _policyId
+    ) public view returns (string[] memory) {
+        return servicesCovered[_nullifier][_policyId];
     }
 
     /// @notice Check if a policy is active and valid at the current time.
@@ -134,18 +157,10 @@ contract InsurancePolicyIssuer {
     /// @notice Deactivate a policy (e.g., after it expires or coverage is exhausted).
     /// @param _nullifier: The nullifier of the policy to deactivate.
     function deactivatePolicy(uint256 _nullifier) public {
-        // In a real scenario, you'd have restricted access control (e.g., only the insurer can call this)
         require(
             policyIssued[_nullifier],
             "[InsurancePolicyIssuer]: No policy found for this nullifier."
         );
         policies[_nullifier].active = false;
-    }
-
-    /// @notice Helper function to verify certain user attributes if needed (e.g., Age)
-    /// For demonstration. Actual logic depends on how the circuit and revealArray are defined.
-    function checkUserAgeFromRevealArray(uint256[4] memory revealArray) internal pure returns (bool) {
-        // Example: revealArray[0] = 1 means ageAbove18 is true
-        return (revealArray[0] == 1);
     }
 }
