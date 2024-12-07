@@ -1,0 +1,331 @@
+[
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "_nullifier",
+				"type": "uint256"
+			}
+		],
+		"name": "deactivatePolicy",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "nullifierSeed",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "nullifier",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "timestamp",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "signal",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256[4]",
+				"name": "revealArray",
+				"type": "uint256[4]"
+			},
+			{
+				"internalType": "uint256[8]",
+				"name": "groth16Proof",
+				"type": "uint256[8]"
+			},
+			{
+				"internalType": "uint256",
+				"name": "coverageAmount",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "validTill",
+				"type": "uint256"
+			},
+			{
+				"internalType": "string[]",
+				"name": "servicesCoveredList",
+				"type": "string[]"
+			}
+		],
+		"name": "issuePolicy",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "_verifierAddr",
+				"type": "address"
+			}
+		],
+		"stateMutability": "nonpayable",
+		"type": "constructor"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": true,
+				"internalType": "uint256",
+				"name": "policyId",
+				"type": "uint256"
+			},
+			{
+				"indexed": true,
+				"internalType": "address",
+				"name": "issuer",
+				"type": "address"
+			},
+			{
+				"indexed": true,
+				"internalType": "uint256",
+				"name": "nullifier",
+				"type": "uint256"
+			},
+			{
+				"indexed": false,
+				"internalType": "uint256",
+				"name": "coverageAmount",
+				"type": "uint256"
+			},
+			{
+				"indexed": false,
+				"internalType": "uint256",
+				"name": "validTill",
+				"type": "uint256"
+			},
+			{
+				"indexed": false,
+				"internalType": "string[]",
+				"name": "servicesCovered",
+				"type": "string[]"
+			}
+		],
+		"name": "PolicyIssued",
+		"type": "event"
+	},
+	{
+		"inputs": [],
+		"name": "anonAadhaarVerifierAddr",
+		"outputs": [
+			{
+				"internalType": "address",
+				"name": "",
+				"type": "address"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "_nullifier",
+				"type": "uint256"
+			}
+		],
+		"name": "getPolicy",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			},
+			{
+				"internalType": "bool",
+				"name": "",
+				"type": "bool"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "_nullifier",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "_policyId",
+				"type": "uint256"
+			}
+		],
+		"name": "getServicesCovered",
+		"outputs": [
+			{
+				"internalType": "string[]",
+				"name": "",
+				"type": "string[]"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "timestamp",
+				"type": "uint256"
+			}
+		],
+		"name": "isLessThan3HoursAgo",
+		"outputs": [
+			{
+				"internalType": "bool",
+				"name": "",
+				"type": "bool"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "_nullifier",
+				"type": "uint256"
+			}
+		],
+		"name": "isPolicyValid",
+		"outputs": [
+			{
+				"internalType": "bool",
+				"name": "",
+				"type": "bool"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "nextPolicyId",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"name": "policies",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "policyId",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "nullifier",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "coverageAmount",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "validTill",
+				"type": "uint256"
+			},
+			{
+				"internalType": "bool",
+				"name": "active",
+				"type": "bool"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"name": "policyIssued",
+		"outputs": [
+			{
+				"internalType": "bool",
+				"name": "",
+				"type": "bool"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"name": "servicesCovered",
+		"outputs": [
+			{
+				"internalType": "string",
+				"name": "",
+				"type": "string"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	}
+]
